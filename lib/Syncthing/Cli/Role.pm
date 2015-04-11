@@ -3,7 +3,6 @@ package Syncthing::Cli::Role;
 use Config::Fast;
 use Path::Class;
 use REST::Client;
-use Carp;
 use JSON::MaybeXS;
 use DDP;
 use Getopt::Long;
@@ -22,9 +21,19 @@ has 'remote' => (is => 'ro', lazy => 1, default => sub {
 	    return 'http' . ($ssl ? 's' : '') . '://' . $host . ':' . $port;
 });
 
-has 'api' => (is => 'lazy', default => sub {
+has 'api' => (is => 'ro', lazy => 1, default => sub {
 		my $self = shift;
 		my $client = REST::Client->new(host => $self->remote . '/rest');
+		my $content = '';
+	    if (! eval { $content = decode_json($client->GET('/system/ping')->responseContent()); 1 }) {
+			warn("cant connect to ", $self->remote);
+			exit(1);
+		}
+
+		if (($content->{ping} // '') ne 'pong') {
+			warn "remote ", $self->remote," doesnt repond on ping";
+			exit(1);
+		}
 		return $client;
 });
 

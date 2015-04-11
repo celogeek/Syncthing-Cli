@@ -13,7 +13,6 @@ sub execute {
 	my ($directory) = @$args; 
 	croak "Missing directory_id" if !defined $directory;
 	my $config = $self->get('db/status?folder=' . $directory);
-	croak "cant connect to remote" if !scalar keys %$config;
 	croak "nothing found for $directory" if !$config->{version};
 	say $directory,': ';
 	say "    state: ", $config->{state};
