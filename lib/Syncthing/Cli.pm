@@ -18,13 +18,13 @@ sub execute {
 
 1;
 __DATA__
-syncthing-cli command options
+syncthing-cli [-h host] [-p port] [-s] command options
+
+  * -h: set the host, default 127.0.0.1
+  * -p: set the port, default 8888
+  * -s: ssl protocol
 
   * list: list all directory id and path
   * status [directory_id]: get status of directory
   * version: get current client version
   * checkupdate: check if a new version is available
-
-Remote url need to be set in ~/.syncthingrc
-
-remote: http://localhost:8888

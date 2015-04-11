@@ -5,19 +5,26 @@ use Path::Class;
 use REST::Client;
 use Carp;
 use JSON::MaybeXS;
+use DDP;
+use Getopt::Long;
 use Moo::Role;
 
-has 'config' => (is => 'lazy', default => sub{
-	my $config_file = file($ENV{HOME}, '.syncthingclirc')->stringify;
-	my %config;
-	eval { %config = fastconfig($config_file); 1 };
-	return \%config;
+my $host = '127.0.0.1';
+my $port = 8888;
+my $ssl = 0;
+
+before _initialize_from_cmd => sub {
+	GetOptions('host|h=s' => \$host, 'port|p=i' => \$port, 'ssl|s' => \$ssl);
+};
+
+has 'remote' => (is => 'ro', lazy => 1, default => sub {
+		my $self = shift;
+	    return 'http' . ($ssl ? 's' : '') . '://' . $host . ':' . $port;
 });
 
 has 'api' => (is => 'lazy', default => sub {
 		my $self = shift;
-		my $remote = $self->config->{remote} or croak "Please set 'remote' in '.syncthingclirc'";
-		my $client = REST::Client->new(host => $remote . '/rest');
+		my $client = REST::Client->new(host => $self->remote . '/rest');
 		return $client;
 });
 
