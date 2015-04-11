@@ -8,4 +8,4 @@ use warnings;
 # VERSION
 use Syncthing::Cli;
 
-Syncthing::Cli->new_with_options->run;
+Syncthing::Cli->new_with_cmd;
