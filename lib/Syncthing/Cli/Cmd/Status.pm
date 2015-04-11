@@ -17,12 +17,12 @@ sub execute {
 	croak "nothing found for $directory" if !$config->{version};
 	say $directory,': ';
 	say "    state: ", $config->{state};
-	my $progress = 100;
+	my $progress = '???';
 	if ($config->{globalBytes}) {
 		$progress = $config->{inSyncBytes} * 100.000 / $config->{globalBytes};
 	}
 	say "    progress: ", sprintf("%.2f", $progress),"%";
-	if ($config->{state} ne 'idle') {
+	if ($config->{state} eq 'syncing') {
 		say "    fetching: ", $config->{needFiles}, " file(s), ", format_bytes($config->{needBytes}); 
 	}
 	say "    local: ", $config->{localFiles}, " file(s), ", format_bytes($config->{localBytes}); 
