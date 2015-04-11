@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+# PODNAME: syncthing-cli
+# ABSTRACT: Client for Syncthing
+
+use strict;
+use warnings;
+# VERSION
+use Syncthing::Cli;
+
+Syncthing::Cli->new_with_options->run;
