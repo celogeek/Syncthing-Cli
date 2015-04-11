@@ -13,7 +13,17 @@ use feature 'say';
 
 sub execute {
 	my ($self) = @_;
-	say "Remote: ", $self->config->{remote};
+	say <DATA>;
 }
 
 1;
+__DATA__
+syncthing-cli command options
+
+  * list: list all directory id and path
+  * version: get current client version
+  * checkupdate: check if a new version is available
+
+Remote url need to be set in ~/.syncthingrc
+
+remote: http://localhost:8888
