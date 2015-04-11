@@ -5,7 +5,6 @@ with 'Syncthing::Cli::Role';
 use MooX::Cmd;
 use feature 'say';
 use Carp;
-use DDP;
 
 sub execute {
 	my ($self) = @_;
