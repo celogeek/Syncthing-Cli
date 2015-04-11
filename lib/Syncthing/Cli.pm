@@ -21,6 +21,7 @@ __DATA__
 syncthing-cli command options
 
   * list: list all directory id and path
+  * status [directory_id]: get status of directory
   * version: get current client version
   * checkupdate: check if a new version is available
 
