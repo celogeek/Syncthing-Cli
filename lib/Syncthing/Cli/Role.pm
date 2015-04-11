@@ -2,7 +2,8 @@ package Syncthing::Cli::Role;
 
 use Config::Fast;
 use Path::Class;
-use REST::Client;
+use HTTP::Async;
+use HTTP::Request;
 use JSON::MaybeXS;
 use DDP;
 use Getopt::Long;
@@ -18,31 +19,31 @@ before _initialize_from_cmd => sub {
 
 has 'remote' => (is => 'ro', lazy => 1, default => sub {
 		my $self = shift;
-	    return 'http' . ($ssl ? 's' : '') . '://' . $host . ':' . $port;
+	    return 'http' . ($ssl ? 's' : '') . '://' . $host . ':' . $port . '/rest/';
 });
 
 has 'api' => (is => 'ro', lazy => 1, default => sub {
 		my $self = shift;
-		my $client = REST::Client->new(host => $self->remote . '/rest');
-		my $content = '';
-	    if (! eval { $content = decode_json($client->GET('/system/ping')->responseContent()); 1 }) {
-			warn("cant connect to ", $self->remote);
-			exit(1);
-		}
-
-		if (($content->{ping} // '') ne 'pong') {
-			warn "remote ", $self->remote," doesnt repond on ping";
-			exit(1);
-		}
-		return $client;
+		return HTTP::Async->new;
 });
 
 sub get {
 	my $self = shift;
-	my $path = shift;
-	my $content;
-	eval { $content = decode_json($self->api->GET($path)->responseContent());1 }
-		or $content = {};
-	return $content;
+	my @request;
+	while(my $path = shift) {
+		my $id = $self->api->add(HTTP::Request->new(GET => $self->remote . $path));
+		push @request, $id;
+	}
+	my %responses;
+	while(my ($response, $id) = $self->api->wait_for_next_response) {
+		if ($response->is_success) {
+			$responses{$id} = decode_json($response->decoded_content); 
+		} else {
+			$responses{$id} = {};
+		}
+	}
+	my @ordered_response = map { $responses{$_} } @request; 
+	return wantarray ? @ordered_response : $ordered_response[-1];
 }
+
 1;
