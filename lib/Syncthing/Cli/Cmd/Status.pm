@@ -10,12 +10,29 @@ use Number::Bytes::Human qw(format_bytes);
 
 sub execute {
 	my ($self, $args) = @_;
-	my ($directory) = @$args; 
-	croak "Missing directory_id" if !defined $directory;
-	my $config = $self->get('db/status?folder=' . $directory);
-	croak "nothing found for $directory" if !$config->{version};
+
+	# missing specific directory, list all
+	if(!@$args) {
+		my $config = $self->get('system/config');
+		@$args = map { $_->{id} } @{$config->{folders}};
+	}
+
+	my @responses = $self->get(map {'db/status?folder=' . $_} @$args);
+	
+	for my $config(@responses) {
+		my $directory = shift @$args;
+		$self->display($directory, $config);
+		say "";
+	}
+}
+
+sub display {
+	my ($self, $directory, $config) = @_;
 	say $directory,': ';
-	say "    state: ", $config->{state};
+	say "    state: ", $config->{state} || 'unknown';
+
+	return if !$config->{version};
+
 	my $progress = '???';
 	if ($config->{globalBytes}) {
 		$progress = $config->{inSyncBytes} * 100.000 / $config->{globalBytes};
@@ -26,7 +43,6 @@ sub execute {
 	}
 	say "    local: ", $config->{localFiles}, " file(s), ", format_bytes($config->{localBytes}); 
 	say "    global: ", $config->{globalFiles}, " file(s), ", format_bytes($config->{globalBytes}); 
-
 }
 
 1;
