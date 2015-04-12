@@ -30,7 +30,6 @@ sub execute {
 	for my $config(@responses) {
 		my $directory = shift @$args;
 		$self->display($directory, $config, $skip_idle);
-		say "";
 	}
 }
 
@@ -55,6 +54,7 @@ sub display {
 	}
 	say "    local: ", $config->{localFiles}, " file(s), ", format_bytes($config->{localBytes}); 
 	say "    global: ", $config->{globalFiles}, " file(s), ", format_bytes($config->{globalBytes}); 
+	say "";
 }
 
 1;
