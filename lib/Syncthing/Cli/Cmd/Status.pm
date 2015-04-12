@@ -7,9 +7,17 @@ use feature 'say';
 use Carp;
 use DDP;
 use Number::Bytes::Human qw(format_bytes);
+use Getopt::Long qw(:config pass_through);
 
 sub execute {
 	my ($self, $args) = @_;
+
+	my $skip_idle;
+	{
+		local @ARGV = @$args;
+		GetOptions('active|a' => \$skip_idle);
+		@$args = @ARGV;
+	}
 
 	# missing specific directory, list all
 	if(!@$args) {
@@ -21,15 +29,19 @@ sub execute {
 	
 	for my $config(@responses) {
 		my $directory = shift @$args;
-		$self->display($directory, $config);
+		$self->display($directory, $config, $skip_idle);
 		say "";
 	}
 }
 
 sub display {
-	my ($self, $directory, $config) = @_;
+	my ($self, $directory, $config, $skip_idle) = @_;
+	$config->{state} ||= 'unknown';
+
+	return if $skip_idle && $config->{state} eq 'idle';
+
 	say $directory,': ';
-	say "    state: ", $config->{state} || 'unknown';
+	say "    state: ", $config->{state};
 
 	return if !$config->{version};
 

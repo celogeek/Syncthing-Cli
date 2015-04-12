@@ -6,7 +6,7 @@ use HTTP::Async;
 use HTTP::Request;
 use JSON::MaybeXS;
 use DDP;
-use Getopt::Long;
+use Getopt::Long qw(:config pass_through);
 use Moo::Role;
 
 my $host = '127.0.0.1';
