@@ -40,7 +40,7 @@ sub execute {
 				my $progress = sprintf("[%-".$cols."s]", "#" x ($total ? int($done / $total * $cols) : $cols));
 
 				$scr
-				->at($pos++,0)->puts(sprintf("%-20s: %s (%s of %s), %.2f %%", $id, $file,format_bytes($done), format_bytes($total), $total ? $done * 100.000 / $total : 100))->clreol()
+				->at($pos++,0)->puts(sprintf("%s: %s (%s of %s), %.2f %%", $id, $file,format_bytes($done), format_bytes($total), $total ? $done * 100.000 / $total : 100))->clreol()
 				->at($pos++,0)->puts($progress);
 				$pos++;
 			}
