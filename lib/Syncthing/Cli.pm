@@ -25,6 +25,8 @@ syncthing-cli [-h host] [-p port] [-s] command options
   * -s: ssl protocol
 
   * list: list all directory id and path
+  	-p: list path only
+	-i: list id only
   * status: get status
         * [ directory ] [ directory ] ...
         * -a: only active one
