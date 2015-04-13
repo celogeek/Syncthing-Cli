@@ -7,7 +7,6 @@ use feature 'say';
 use Number::Bytes::Human qw(format_bytes);
 use JSON;
 use Term::ANSIColor qw(:constants);
-use DDP;
 
 has 'devices' => (is => 'lazy');
 sub _build_devices {

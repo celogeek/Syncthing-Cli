@@ -5,7 +5,6 @@ with 'Syncthing::Cli::Role';
 use MooX::Cmd;
 use feature 'say';
 use Carp;
-use DDP;
 use Number::Bytes::Human qw(format_bytes);
 use Getopt::Long qw(:config pass_through);
 

@@ -5,7 +5,6 @@ use Path::Class;
 use HTTP::Async;
 use HTTP::Request;
 use JSON::MaybeXS;
-use DDP;
 use Getopt::Long qw(:config pass_through);
 use Moo::Role;
 
