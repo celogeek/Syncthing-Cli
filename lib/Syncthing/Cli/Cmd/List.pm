@@ -13,6 +13,7 @@ sub execute {
 	for my $folder(sort { $a->{id} cmp $b->{id} } @{$config->{folders}}) {
 		say $folder->{id}, ':';
 		say "    path: ", $folder->{path};
+		say "    readOnly: ", $folder->{readOnly} ? 'true' : 'false';
 		say "    devices:";
 		for my $device(sort map { $devices{$_->{deviceID}} // $_->{deviceID} } @{$folder->{devices}}) {
 			say "        * ", $device;
