@@ -26,6 +26,8 @@ sub execute {
 		my @events =  @{$self->get('events?since='.$since)//[]};
 		next if !@events;
 		$since = $events[-1]->{id};
+		$scr->at(2,0)->puts("last event: $since");
+
 		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @events;
 		next if !@downloadsData;
 		my %downloads;
@@ -40,7 +42,7 @@ sub execute {
 			}
 		}
 
-		my $pos = 3;
+		my $pos = 4;
 		for my $id(sort keys %downloads) {
 			$scr->at($pos++,0)->puts("[" . $id . "]")->clreol();
 			my $files = $downloads{$id};
