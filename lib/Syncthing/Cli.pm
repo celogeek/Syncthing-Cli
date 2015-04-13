@@ -30,5 +30,6 @@ syncthing-cli [-h host] [-p port] [-s] command options
   * status: get status
         * [ directory ] [ directory ] ...
         * -a: only active one
+  * live: display live events
   * version: get current client version
   * checkupdate: check if a new version is available
