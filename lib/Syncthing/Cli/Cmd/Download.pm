@@ -35,7 +35,7 @@ sub execute {
 			@$events
 		) {
 			my ($folder, $info) = @{$data}{qw(folder summary)};
-			$summary{$folder} = "[".sprintf("%-15s", $folder)."] " . $info->{needFiles} . " files left (" . format_bytes($info->{needBytes}) . ')';
+			$summary{$folder} = "[".sprintf("%-15s", $folder)."] " . $info->{needFiles} . " files left (" . format_bytes($info->{needBytes}) . 'B), ' . format_bytes($info->{inSyncBytes}) . 'B on ' . format_bytes($info->{globalBytes}) . 'B';
 		}
 
 		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @$events;
