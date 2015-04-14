@@ -67,7 +67,7 @@ sub displayRemoteIndexUpdated {
 
 sub displayLocalIndexUpdated {
 	my ($self, $update) = @_;
-	say BLUE, sprintf("[%-20s] %-15s: %d item(s)", "LocalIndexUpdated", $update->{folder}, $update->{numFiles}), RESET;
+	say BLUE, sprintf("[%-20s] %-15s: %d item(s)", "LocalIndexUpdated", $update->{folder}, $update->{numFiles} // 1), RESET;
 }
 
 sub displayFolderCompletion {
