@@ -21,7 +21,9 @@ sub execute {
 
 	my $since = 0;
 	while(1) {
-		for my $event(@{$self->get('events?since='.$since) // []}) {
+		my $events = $self->get('events?since='.$since);
+		next if ref $events ne 'ARRAY';
+		for my $event(@$events) {
 			$since = $event->{id};
 			$self->display($event);
 		}
