@@ -22,17 +22,27 @@ sub execute {
 
 	my $since = 0;
 	while(1) {
-		last if ($scr->key_pressed && $scr->getch eq 'q');
-		my @events =  @{$self->get('events?since='.$since)//[]};
-		next if !@events;
-		$since = $events[-1]->{id};
+		my $pos = 4;
+		my $events = $self->get('events?since='.$since);
+		next if ref $events ne 'ARRAY';
+		$since = $events->[-1]->{id};
 		$scr->at(2,0)->puts("last event: $since");
 
-		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @events;
-		next if !@downloadsData;
+		my %summary;
+		for my $data(
+			map { $_->{data} }
+			grep { $_->{type} eq 'FolderSummary' }
+			@$events
+		) {
+			my ($folder, $info) = @{$data}{qw(folder summary)};
+			$summary{$folder} = "[".sprintf("%-15s", $folder)."] " . $info->{needFiles} . " files left (" . format_bytes($info->{needBytes}) . ')';
+		}
+
+		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @$events;
 		my %downloads;
 		for my $download(@downloadsData) {
 			for my $id(keys %$download) {
+				$summary{$id} //= sprintf("%-15s", $id);
 				my $files = $download->{$id};
 				for my $file(keys %$files) {
 					my $done = $files->{$file}{bytesDone};
@@ -42,10 +52,11 @@ sub execute {
 			}
 		}
 
-		my $pos = 4;
-		for my $id(sort keys %downloads) {
-			$scr->at($pos++,0)->puts("[" . $id . "]")->clreol();
-			my $files = $downloads{$id};
+		next if !scalar keys %summary;
+
+		for my $id(sort keys %summary) {
+			$scr->at($pos++,0)->puts($summary{$id})->clreol();
+			my $files = $downloads{$id} // {};
 			for my $file(sort keys %$files) {
 				$self->display($scr, $pos, $file, $files->{$file});
 				$pos++;
@@ -59,7 +70,7 @@ sub execute {
 		$scr->at(2,0);
 
 	} continue {
-		sleep(5);
+		last if ($scr->key_pressed && $scr->getch eq 'q');
 	}
 	$scr->flush_input;
 	$scr->clrscr();
