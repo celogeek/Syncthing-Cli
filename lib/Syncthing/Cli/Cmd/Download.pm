@@ -38,7 +38,7 @@ sub execute {
 			@$events
 		) {
 			my ($folder, $info) = @{$data}{qw(folder summary)};
-			$summary{$folder} = "[".sprintf("%-15s", $folder)."] " . $info->{needFiles} . " files left (" . format_bytes($info->{needBytes}) . 'B), ' . format_bytes($info->{inSyncBytes}) . 'B on ' . format_bytes($info->{globalBytes}) . 'B';
+			$summary{$folder} = "[".sprintf("%-15s", $folder)."] " . $info->{needFiles} . " files left (" . format_bytes($info->{needBytes}) . 'B), ' . format_bytes($info->{inSyncBytes}) . 'B on ' . format_bytes($info->{globalBytes}) . 'B -> ' . $info->{state};
 		}
 
 		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @$events;
@@ -63,6 +63,8 @@ sub execute {
 			my $files = $downloads{$id} // {};
 			for my $file(sort keys %$files) {
 				$self->display($scr, $pos, $file, $files->{$file});
+				# 100 % reach, remove
+				delete $files->{$file} if $files->{$file}->[0] == $files->{$file}->[1];
 				$pos++;
 			}
 			$scr->at($pos++,0)->clreol();
@@ -75,6 +77,7 @@ sub execute {
 
 	} continue {
 		last if ($scr->key_pressed && $scr->getch eq 'q');
+		sleep(5);
 	}
 	$scr->flush_input;
 	$scr->clrscr();
