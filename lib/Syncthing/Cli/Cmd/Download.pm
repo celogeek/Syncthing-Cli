@@ -25,7 +25,10 @@ sub execute {
 	while(1) {
 		my $pos = 4;
 		my $events = $self->get('events?since='.$since);
-		next if ref $events ne 'ARRAY';
+		if (ref $events ne 'ARRAY') {
+			$since = 0;
+			next;
+		}
 		$since = $events->[-1]->{id};
 		$scr->at(2,0)->puts("last event: $since");
 

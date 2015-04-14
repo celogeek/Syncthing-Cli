@@ -35,8 +35,9 @@ sub get {
 	}
 	my %responses;
 	while(my ($response, $id) = $self->api->wait_for_next_response) {
-		if ($response->is_success) {
-			$responses{$id} = decode_json($response->decoded_content); 
+		my $json;
+		if ($response->is_success && eval{$json = decode_json($response->decoded_content); 1}) {
+			$responses{$id} = $json; 
 		} else {
 			$responses{$id} = {};
 		}

@@ -22,7 +22,10 @@ sub execute {
 	my $since = 0;
 	while(1) {
 		my $events = $self->get('events?since='.$since);
-		next if ref $events ne 'ARRAY';
+		if (ref $events ne 'ARRAY') {
+			$since = 0;
+			next;
+		}
 		for my $event(@$events) {
 			$since = $event->{id};
 			$self->display($event);
