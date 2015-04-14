@@ -21,6 +21,7 @@ sub execute {
 
 	my $since = 0;
 	my %summary;
+	my %downloads;
 	while(1) {
 		my $pos = 4;
 		my $events = $self->get('events?since='.$since);
@@ -41,7 +42,7 @@ sub execute {
 		}
 
 		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @$events;
-		my %downloads;
+		my %downloadsIncoming;
 		for my $download(@downloadsData) {
 			for my $id(keys %$download) {
 				$summary{$id} //= sprintf("%-15s", $id);
@@ -49,10 +50,11 @@ sub execute {
 				for my $file(keys %$files) {
 					my $done = $files->{$file}{bytesDone};
 					my $total = $files->{$file}{bytesTotal};
-					$downloads{$id}{$file} = [$done, $total];
+					$downloadsIncoming{$id}{$file} = [$done, $total];
 				}
 			}
 		}
+		%downloads = %downloadsIncoming if scalar keys %downloadsIncoming;
 
 		next if !scalar keys %summary;
 
