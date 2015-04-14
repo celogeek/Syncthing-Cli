@@ -8,7 +8,6 @@ use Number::Bytes::Human qw(format_bytes);
 use JSON;
 use Term::Screen;
 use Term::ANSIColor qw(:constants);
-use DDP;
 
 sub execute {
 	my ($self) = @_;

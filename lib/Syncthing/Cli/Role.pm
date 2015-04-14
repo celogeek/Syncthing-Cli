@@ -4,6 +4,7 @@ use Config::Fast;
 use Path::Class;
 use HTTP::Async;
 use HTTP::Request;
+use HTTP::Headers;
 use JSON::MaybeXS;
 use Getopt::Long qw(:config pass_through);
 use Moo::Role;
@@ -27,10 +28,29 @@ has 'api' => (is => 'ro', lazy => 1, default => sub {
 });
 
 sub get {
+	shift->async('GET', {}, @_);
+}
+
+sub post {
 	my $self = shift;
+	my $config = $self->get('system/config');
+	my $apiKey = $config->{gui}{apiKey};
+	return $self->async('POST', { 'X-API-Key' => $apiKey }, @_);
+}
+
+sub async {
+	my $self = shift;
+	my $method = shift;
+	my $header = shift // {};
 	my @request;
+	
 	while(my $path = shift) {
-		my $id = $self->api->add(HTTP::Request->new(GET => $self->remote . $path));
+		my $id = $self->api->add(
+			HTTP::Request->new(
+				$method => $self->remote . $path,
+				HTTP::Headers->new(%$header)
+			)
+		);
 		push @request, $id;
 	}
 	my %responses;
