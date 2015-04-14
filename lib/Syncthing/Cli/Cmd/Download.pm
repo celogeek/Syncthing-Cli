@@ -21,6 +21,7 @@ sub execute {
 	$scr->at(2,0);
 
 	my $since = 0;
+	my %summary;
 	while(1) {
 		my $pos = 4;
 		my $events = $self->get('events?since='.$since);
@@ -28,7 +29,6 @@ sub execute {
 		$since = $events->[-1]->{id};
 		$scr->at(2,0)->puts("last event: $since");
 
-		my %summary;
 		for my $data(
 			map { $_->{data} }
 			grep { $_->{type} eq 'FolderSummary' }
