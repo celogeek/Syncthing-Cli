@@ -43,7 +43,7 @@ sub execute {
 
 		my @downloadsData = map { $_->{data } } grep { $_->{type} eq 'DownloadProgress' } @$events;
 		my %downloadsIncoming;
-		for my $download(@downloadsData) {
+		if (my $download = pop @downloadsData) {
 			for my $id(keys %$download) {
 				$summary{$id} //= sprintf("%-15s", $id);
 				my $files = $download->{$id};
