@@ -1,5 +1,9 @@
 package Syncthing::Cli::Cmd::Version;
 
+use strict;
+use warnings;
+# VERSION
+
 use Moo;
 with 'Syncthing::Cli::Role';
 use MooX::Cmd;

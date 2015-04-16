@@ -1,5 +1,9 @@
 package Syncthing::Cli::Role;
 
+use strict;
+use warnings;
+# VERSION
+
 use Config::Fast;
 use Path::Class;
 use HTTP::Async;
