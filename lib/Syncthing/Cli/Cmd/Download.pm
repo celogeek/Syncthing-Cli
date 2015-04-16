@@ -103,7 +103,7 @@ sub display {
 	$progress_bar_size = int($done / $total * $max_progress_bar_size);
 	
 	$scr
-	->at($pos,$hcols)->puts("[")
+	->at($pos,$hcols)->puts("[")->clreol()
 	->at($pos,$hcols+1)->puts(sprintf(ON_WHITE . '%' . $progress_bar_size . 's' . RESET, ''))
 	->at($pos,$cols)->puts("]")
 	;
