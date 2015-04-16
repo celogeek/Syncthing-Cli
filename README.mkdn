@@ -6,3 +6,13 @@ To install it :
 curl -sL https://github.com/celogeek/Syncthing-Cli/raw/master/install.sh | bash
 ```
 
+It will deploy in ~/.syncthingcli the client.
+
+Follow the instruction after the installation.
+
+To launch the client and get command possibilities :
+
+```
+syncthing-cli
+```
+
