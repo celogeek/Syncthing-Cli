@@ -20,9 +20,9 @@ dzil install --install-command="$PERL $CPANM ."
 mkdir -p $SYNC_CLI_HOME/bin
 cat << __EOF__ > $SYNC_CLI_HOME/bin/syncthing-cli
 #!/bin/bash
-$SYNC_CLI_ROOT/bin/localenv $SYNC_CLI_ROOT/bin/syncthing-cli "$@"
+$SYNC_CLI_ROOT/bin/localenv $PERL $SYNC_CLI_ROOT/bin/syncthing-cli "\$@"
 __EOF__
-chmod +x $SYNC_CLI_ROOT/bin/syncthing-cli
+chmod +x $SYNC_CLI_HOME/bin/syncthing-cli
 
 echo ""
 echo "Installation done"
