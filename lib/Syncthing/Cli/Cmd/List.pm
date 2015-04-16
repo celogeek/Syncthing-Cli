@@ -12,16 +12,17 @@ use Getopt::Long qw(:config pass_through);
 
 sub execute {
 	my ($self, $args) = @_;
-	my ($listID, $listPath);
+	my ($listFolder, $listPath, $filterReadOnly);
 	{
 		local @ARGV = @$args;
-		GetOptions('id|i' => \$listID, 'path|p', \$listPath);
+		GetOptions('folder|f' => \$listFolder, 'path|p', \$listPath, 'readonly|r' => \$filterReadOnly);
 		@$args = @ARGV;
 	}
 	my $config = $self->get('system/config');
 	my %devices = map { $_->{deviceID} => $_->{name} } @{$config->{devices}};
 	for my $folder(sort { $a->{id} cmp $b->{id} } @{$config->{folders}}) {
-		if ($listID) {
+		next if $filterReadOnly && !$folder->{readOnly};
+		if ($listFolder) {
 			say $folder->{id};
 		} elsif($listPath) {
 			say $folder->{path};

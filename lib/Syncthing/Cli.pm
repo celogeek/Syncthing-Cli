@@ -26,7 +26,8 @@ syncthing-cli [-h host] [-p port] [-s] command options
 
   * list: list all directory id and path
   	-p: list path only
-	-i: list id only
+	-f: list folder only
+	-r: filter read only
   * status: get status
         * [ directory ] [ directory ] ...
         * -a: only active one
